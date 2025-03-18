@@ -7,14 +7,14 @@ const Task = () => {
             className="bg-[#2f3136] p-4 rounded-lg shadow-lg w-64 max-h-64"
           >
             <h2 className="text-white text-lg font-semibold mb-2 text-center">
-              Temat {index + 1}
+              Topic {index + 1}
             </h2>
   
             <ul className="text-gray-300">
-              <li>Zadanie 1</li>
-              <li>Zadanie 2</li>
-              <li>Zadanie 3</li>
-              <li>Zadanie 4</li>
+              <li>Task 1</li>
+              <li>Task 2</li>
+              <li>Task 3</li>
+              <li>Task 4</li>
             </ul>
           </div>
         ))}
