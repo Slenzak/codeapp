@@ -1,4 +1,6 @@
+import { useNavigate } from "react-router-dom";
 const Task = () => {
+  const navigate = useNavigate();
     return (
       <div className="bg-[#36393e] h-screen w-screen p-4 flex flex-wrap gap-4">
         {Array.from({ length: 12 }).map((_, index) => (
@@ -18,6 +20,9 @@ const Task = () => {
             </ul>
           </div>
         ))}
+        <button onClick={() => navigate("/")} className="fixed bottom-5 right-5 p-2.5 px-5 bg-blue-600 text-white border-none rounded-md cursor-pointer">
+            Return to Main Page
+        </button>
       </div>
     );
   };
