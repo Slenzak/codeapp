@@ -6,6 +6,7 @@ import Mainpage from './pages/mainpage';
 import Sandbox from './pages/sandbox';
 import Task from "./pages/task";
 import TaskDetail from "./pages/taskdetail";
+import Login from "./pages/registerlogin"
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/task" element={<Task />} />
           <Route path="/task/:id" element={<TaskDetail />} />
           <Route path="/sandbox" element={<Sandbox />} />
+          <Route path="/login" element={<Login />}/>
       </Routes>
     </BrowserRouter>
   );

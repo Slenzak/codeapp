@@ -13,6 +13,8 @@ const Mainpage = () =>{
                 <div className="absolute inset-0 bg-black bg-opacity-50 hover:bg-opacity-30 transition duration-300"></div>
                 <h1 className="relative text-white text-2xl">Go to Sandbox</h1>
             </div>
+            <button onClick={() => navigate("/login")} className="absolute top-5 right-5 p-2.5 bg-blue-600 w-10 h-10 rounded-full shadow-lg bg-[url('/public/avatar.png')] bg-cover bg-center">
+            </button>
         </div>
     )
 }

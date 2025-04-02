@@ -9,6 +9,7 @@ const CodeEditor = ({ value, onChange, language}) => {
       language={language}
       value={value}
       onChange={onChange}
+      
     />
   );
 }

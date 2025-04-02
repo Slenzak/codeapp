@@ -41,7 +41,10 @@ const Task = () => {
       >
         Return to Main Page
       </button>
+      <button onClick={() => navigate("/login")} className="absolute top-5 right-5 p-2.5 bg-blue-600 w-10 h-10 rounded-full shadow-lg bg-[url('/public/avatar.png')] bg-cover bg-center">
+            </button>
     </div>
+    
   );
 };
 
