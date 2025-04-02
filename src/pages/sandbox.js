@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 const Sandbox = () =>{
     const navigate = useNavigate();
     const [files, setFiles] = useState({
-        'App.js': `function App() {\n  return <h1>Hello, World!</h1>;\n}`,
+        'App.js': `function App() {\n  return <h1>Hello, World!</h1>;\n}`
       });
       const [activeFile, setActiveFile] = useState('App.js');
       const handleCreateFile = (fileName) => {
@@ -41,26 +41,57 @@ const Sandbox = () =>{
       };
       const generateHTML = () => {
         const appCode = files['App.js'] || '';
+        
+        const cssFiles = Object.entries(files)
+        .filter(([name]) => name.endsWith('.css'))
+        .map(([name, content]) => `<style>${content}</style>`)
+        .join('\n');
+
+        const jsFiles = Object.entries(files)
+        .filter(([name]) => name.endsWith('.js'))
+        .map(([name, content]) => `
+          window.modules = window.modules || {};
+          window.modules['./${name}'] = \`
+          ${content}
+        \`;`)
+        .join('\n');
+          
+        return `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            ${cssFiles}
+            <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+            <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+            <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+          </head>
+          <body>
+            <div id="root"></div>
+            <script>
+              window.modules = window.modules || {};
+              ${jsFiles}
     
-        const html = `
-          <!DOCTYPE html>
-          <html>
-            <head>
-              <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
-              <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
-              <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-            </head>
-            <body>
-              <div id="root"></div>
-              <script type="text/babel">
-                ${appCode}
-                  ReactDOM.render(<App />, document.getElementById('root'));
-              </script>
-            </body>
-          </html>
-        `;
-    
-        return html;
+              function customImport(modulePath) {
+                return eval(window.modules[modulePath] || '');
+              }
+            </script>
+            <script type="text/babel">
+              ${appCode}
+              ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
+            </script>
+          </body>
+        </html>
+      `;
+      };
+      const getLanguageFromExtension = (fileName) => {
+        const ext = fileName.split('.').pop();
+        const languageMap = {
+          js: "javascript",
+          css: "css",
+          html: "html",
+          json: "json",
+        };
+        return languageMap[ext] || "plaintext";
       };
 
       return (
@@ -77,6 +108,7 @@ const Sandbox = () =>{
           <CodeEditor
             value={files[activeFile]}
             onChange={(value) => handleUpdateFileContent(activeFile, value)}
+            language={getLanguageFromExtension(activeFile)}
           />
         </div>
         <div className="flex-1 p-2.5 border-t border-gray-300">

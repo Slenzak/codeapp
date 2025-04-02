@@ -5,6 +5,7 @@ import './App.css';
 import Mainpage from './pages/mainpage';
 import Sandbox from './pages/sandbox';
 import Task from "./pages/task";
+import TaskDetail from "./pages/taskdetail";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Routes>
           <Route path="/" element={<Mainpage />}/>
           <Route path="/task" element={<Task />} />
+          <Route path="/task/:id" element={<TaskDetail />} />
           <Route path="/sandbox" element={<Sandbox />} />
       </Routes>
     </BrowserRouter>
