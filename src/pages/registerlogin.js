@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useNavigate } from "react-router";
+import supabase from "../supabase";
 
 
 const Login = () => {
@@ -8,20 +9,95 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [session, setSession] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleLoginSubmit = (e) => {
+  useEffect(() => {
+    const getSession = async () => {
+      const { data } = await supabase.auth.getSession();
+      setSession(data.session);
+    };
+
+    getSession();
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => listener.subscription.unsubscribe();
+  }, []);
+
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login submitted:", username, password);
+  
+    const { error } = await supabase.auth.signInWithPassword({
+      email: `${username}@whocares.com`,
+      password: password,
+    });
+  
+    if (error) {
+      alert("Login failed: " + error.message);
+    } else {
+      alert("Welcome back!");
+      navigate("/");
+    }
   };
+  
 
-  const handleRegisterSubmit = (e) => {
+  const handleRegisterSubmit = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      alert("Passwords do not match!");
+      alert("Passwords don't match");
       return;
     }
-    console.log("Register submitted:", username, password);
+
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email: `${username}@whocares.com`,
+        password: password,
+      });
+
+      if (error) throw error;
+
+      alert("Registration successful!");
+      setIsLogin(true);
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
+
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    alert("Wylogowano.");
+    setSession(null);
+  };
+  if (session) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-[#36393e]">
+        <div className="bg-[#2f3136] p-8 rounded-lg shadow-lg w-96 text-center">
+          <h2 className="text-white text-2xl font-semibold mb-4">
+            Welcome, {username || session.user.email.split('@')[0]}
+          </h2>
+          <button
+            onClick={handleLogout}
+            className="w-full p-2 bg-red-600 text-white rounded-md mt-4"
+          >
+            Logout
+          </button>
+          <button
+            onClick={() => navigate("/")}
+            className="w-full p-2 bg-blue-600 text-white rounded-md mt-4"
+          >
+            Go to Main Page
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex items-center justify-center h-screen bg-[#36393e]">
@@ -34,7 +110,7 @@ const Login = () => {
           <button
             onClick={() => setIsLogin(true)}
             className={`px-4 py-2 text-sm font-semibold ${
-              isLogin ? "bg-blue-600 text-white transition duration-300" : "bg-[#2f3136] text-white transition duration-300"
+              isLogin ? "bg-blue-600 text-white" : "bg-[#2f3136] text-white"
             } rounded-l-md`}
           >
             Login
@@ -42,7 +118,7 @@ const Login = () => {
           <button
             onClick={() => setIsLogin(false)}
             className={`px-4 py-2 text-sm font-semibold ${
-              !isLogin ? "bg-blue-600 text-white transition duration-300" : "bg-[#2f3136] text-white transition duration-300"
+              !isLogin ? "bg-blue-600 text-white" : "bg-[#2f3136] text-white"
             } rounded-r-md`}
           >
             Register
@@ -84,8 +160,9 @@ const Login = () => {
             <button
               type="submit"
               className="w-full p-2 bg-blue-600 text-white rounded-md mt-4"
+              disabled={loading}
             >
-              Login
+              {loading ? "Loading..." : "Login"}
             </button>
           </form>
         ) : (
@@ -138,11 +215,11 @@ const Login = () => {
             <button
               type="submit"
               className="w-full p-2 bg-blue-600 text-white rounded-md mt-4"
+              disabled={loading}
             >
-              Register
+              {loading ? "Loading..." : "Register"}
             </button>
           </form>
-          
         )}
       </div>
       <button
@@ -154,5 +231,4 @@ const Login = () => {
     </div>
   );
 };
-
 export default Login;
