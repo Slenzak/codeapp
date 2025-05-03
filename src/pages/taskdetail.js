@@ -104,22 +104,13 @@ const TaskDetail = () => {
             language={task.language.toLowerCase()} 
           />
         </div>
-        if(task.language.toLowerCase()!=javascript){
         <iframe
           key={iframeKey} 
           className="w-1/2 h-64 border bg-white"
           srcDoc={userCode}
           title="Live Preview"
           sandbox="allow-scripts allow-modals"
-        />}else{
-          <iframe
-          key={iframeKey} 
-          className="w-1/2 h-64 border bg-white"
-          srcDoc={`<script>`+userCode+`</script>`}
-          title="Live Preview"
-          sandbox="allow-scripts allow-modals"
         />
-        }
       </div>
 
       <button
