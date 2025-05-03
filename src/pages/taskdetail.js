@@ -101,7 +101,7 @@ const TaskDetail = () => {
           <CodeEditor 
             value={userCode} 
             onChange={setUserCode} 
-            language={task.language} 
+            language={task.language.toLowerCase()} 
           />
         </div>
         <iframe
