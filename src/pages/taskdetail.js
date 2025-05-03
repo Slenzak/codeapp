@@ -109,7 +109,7 @@ const TaskDetail = () => {
           className="w-1/2 h-64 border bg-white"
           srcDoc={userCode}
           title="Live Preview"
-          sandbox="allow-scripts"
+          sandbox="allow-scripts allow-modals"
         />
       </div>
 
