@@ -101,7 +101,7 @@ const TaskDetail = () => {
           <CodeEditor 
             value={userCode} 
             onChange={setUserCode} 
-            language="html" 
+            language={task.language} 
           />
         </div>
         <iframe
